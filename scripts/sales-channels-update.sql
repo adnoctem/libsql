@@ -4,16 +4,18 @@ SET @migration_sales_channel := '';
 
 -- get migration Sales Channel ID
 select sales_channel.id
-into @migration_sales_channel
 from shopware.sales_channel
-where not active;
+where not active
+into @migration_sales_channel;
 
 -- get active Sales Channel ID
 select sales_channel.id
-into @sales_channel
 from shopware.sales_channel
+inner join shopware.sales_channel_translation
+    on sales_channel.id = sales_channel_translation.sales_channel_id
 where active = 1
-and updated_at is not NULL;
+  and sales_channel_translation.name = 'Storefront'
+into @sales_channel;
 
 -- select @migration_sales_channel as '';
 -- select @sales_channel as '';
